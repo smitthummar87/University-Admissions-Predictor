@@ -279,7 +279,7 @@ class UniPredictApp {
     // Preset button loaders
     const presetBtnStellar = document.getElementById("presetStellar");
     const presetBtnAvg = document.getElementById("presetAverage");
-    
+
     if (presetBtnStellar) {
       presetBtnStellar.addEventListener("click", () => {
         UniPredictApp.populateForm({
@@ -397,7 +397,7 @@ class UniPredictApp {
     const simSelect = document.getElementById("simUniSelect");
     if (simSelect && typeof UNIVERSITIES_DATA !== "undefined") {
       simSelect.innerHTML = UNIVERSITIES_DATA.map(u => `<option value="${u.id}">${u.name} (${u.shortName})</option>`).join("");
-      
+
       const controls = ["simUniSelect", "simGpa", "simGre", "simPapers", "simWork"];
       controls.forEach(id => {
         const el = document.getElementById(id);
@@ -531,7 +531,7 @@ class UniPredictApp {
     modal.style.display = "flex";
 
     document.getElementById("diagProbVal").innerText = res.probability.toFixed(1) + "%";
-    
+
     const badge = document.getElementById("diagClassificationBadge");
     if (badge) {
       badge.innerText = `${res.classification} Fit`;
@@ -590,7 +590,7 @@ class UniPredictApp {
     const acceptedCount = history.filter(h => h.status === "Accepted").length;
     document.getElementById("statAcceptedCount").innerText = acceptedCount;
 
-    const avgProb = history.length > 0 
+    const avgProb = history.length > 0
       ? (history.reduce((acc, h) => acc + h.probability, 0) / history.length).toFixed(1) + "%"
       : "72.4%";
     document.getElementById("statAverageProb").innerText = avgProb;
@@ -648,9 +648,9 @@ class UniPredictApp {
     const tier = tierSelect ? tierSelect.value : "ALL";
 
     let filtered = UNIVERSITIES_DATA.filter(u => {
-      const matchQuery = !query || 
-        u.name.toLowerCase().includes(query) || 
-        u.shortName.toLowerCase().includes(query) || 
+      const matchQuery = !query ||
+        u.name.toLowerCase().includes(query) ||
+        u.shortName.toLowerCase().includes(query) ||
         u.location.toLowerCase().includes(query) ||
         (u.state && u.state.toLowerCase().includes(query)) ||
         (u.region && u.region.toLowerCase().includes(query));
@@ -831,7 +831,7 @@ class UniPredictApp {
 
     const saved = localStorage.getItem("unipredict_planner_v1");
     if (saved) {
-      try { this.plannerChecklist = JSON.parse(saved); } catch(e){}
+      try { this.plannerChecklist = JSON.parse(saved); } catch (e) { }
     }
 
     container.innerHTML = this.plannerChecklist.map(item => `
@@ -911,7 +911,7 @@ class UniPredictApp {
 
     if (query || statusFilter !== "ALL") {
       history = history.filter(h => {
-        const matchQuery = !query || 
+        const matchQuery = !query ||
           h.applicantName.toLowerCase().includes(query) ||
           (h.universityShort && h.universityShort.toLowerCase().includes(query)) ||
           (h.universityName && h.universityName.toLowerCase().includes(query)) ||
@@ -1033,14 +1033,14 @@ class UniPredictApp {
     const toast = document.createElement("div");
     toast.className = `toast toast-${type}`;
     toast.innerHTML = `<i class="fa-solid ${type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> ${message}`;
-    
+
     let container = document.getElementById("toastContainer");
     if (!container) {
       container = document.createElement("div");
       container.id = "toastContainer";
       document.body.appendChild(container);
     }
-    
+
     container.appendChild(toast);
     setTimeout(() => {
       toast.classList.add("show");

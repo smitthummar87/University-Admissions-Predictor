@@ -38,7 +38,7 @@ class PredictorEngine {
       testScore = Math.min(16, satRatio * 16);
       if (parseInt(profile.satScore) < university.minSat) testScore -= 2.5;
     }
-    
+
     // TOEFL/IELTS English Proficiency Check
     let englishBonus = 0;
     const toeflVal = parseFloat(profile.toeflScore) || (parseFloat(profile.ieltsScore) * 15 + 2.5);
@@ -93,13 +93,13 @@ class PredictorEngine {
     else baselineThreshold = 62;
 
     const delta = totalRawScore - baselineThreshold;
-    
+
     // Logistic sigmoid transformation for realistic smooth curve
     let probability = 1 / (1 + Math.exp(-0.12 * delta));
-    
+
     // Scale probability according to university acceptance rate bounds
     let adjustedProb = probability * 100;
-    
+
     // Cap according to acceptance rate physics
     if (university.acceptanceRate < 10) {
       adjustedProb = Math.min(88, Math.max(4, adjustedProb * 0.9));
@@ -157,7 +157,7 @@ class PredictorEngine {
     }
 
     if (userRadar.research < benchmarkRadar.research && university.researchWeight > 0.20) {
-      gapAnalysis.push(`${university.shortName} places high weight (${(university.researchWeight*100)}%) on research publications.`);
+      gapAnalysis.push(`${university.shortName} places high weight (${(university.researchWeight * 100)}%) on research publications.`);
       recommendations.push(`Publishing 1 additional research paper in IEEE/ACM tier conference will add +15% to your research score.`);
     }
 

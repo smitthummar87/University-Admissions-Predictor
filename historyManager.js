@@ -207,17 +207,17 @@ class HistoryManager {
       const result = typeof PredictorEngine !== "undefined"
         ? PredictorEngine.predictAdmission(profile, uni)
         : {
-            probability: 78.4,
-            classification: "Target",
-            classificationBadge: "badge-target",
-            breakdown: { academicScore: 34, researchScore: 14, workScore: 11, ecLeadershipScore: 12, qualitativeScore: 8.5, totalScore: 79.5 },
-            userRadar: { gpa: 9.5, testScore: 9.2, research: 8.0, workExp: 7.5, leadership: 8.0, sopLor: 8.5 },
-            benchmarkRadar: { gpa: 9.6, testScore: 9.5, research: 8.5, workExp: 7.5, leadership: 8.0, sopLor: 9.0 },
-            gapAnalysis: [],
-            recommendations: ["Solid profile meeting or exceeding baseline requirements."],
-            university: uni,
-            profileSummary: { applicantName: s.name, degree: s.degree, major: s.major }
-          };
+          probability: 78.4,
+          classification: "Target",
+          classificationBadge: "badge-target",
+          breakdown: { academicScore: 34, researchScore: 14, workScore: 11, ecLeadershipScore: 12, qualitativeScore: 8.5, totalScore: 79.5 },
+          userRadar: { gpa: 9.5, testScore: 9.2, research: 8.0, workExp: 7.5, leadership: 8.0, sopLor: 8.5 },
+          benchmarkRadar: { gpa: 9.6, testScore: 9.5, research: 8.5, workExp: 7.5, leadership: 8.0, sopLor: 9.0 },
+          gapAnalysis: [],
+          recommendations: ["Solid profile meeting or exceeding baseline requirements."],
+          university: uni,
+          profileSummary: { applicantName: s.name, degree: s.degree, major: s.major }
+        };
 
       const dateStr = baseDates[idx % baseDates.length];
 
