@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniPredict – University Admissions Predictor</title>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- Ambient Floating Background Glowing Orbs -->
+  <div class="bg-glow-orb bg-glow-1"></div>
+  <div class="bg-glow-orb bg-glow-2"></div>
+  <div class="bg-glow-orb bg-glow-3"></div>
+
+  <div class="app-container">
+
+    <!-- LEFT SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-header">
+        <div class="brand-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <h1>UniPredict</h1>
+          <div class="brand-subtitle">Admissions AI Engine</div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active" data-view="overview">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard Overview</span>
+        </a>
+        <a href="#" class="nav-item" data-view="profile">
+          <i class="fa-solid fa-user-pen"></i>
+          <span>Applicant Profile</span>
+        </a>
+        <a href="#" class="nav-item" data-view="explorer">
+          <i class="fa-solid fa-building-columns"></i>
+          <span>University Explorer</span>
+        </a>
+        <a href="#" class="nav-item" data-view="analytics">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Historical Analytics</span>
+        </a>
+        <a href="#" class="nav-item" data-view="history">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Application History</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p><i class="fa-solid fa-microchip"></i> Final-Year Project v2.4</p>
+        <p>Computer Engineering Dept</p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-wrapper">
+
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="header-title">
+            <h2>University Admissions Predictor Dashboard</h2>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light / Dark Mode"
+            aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+            <span class="theme-label" id="themeLabel">Dark Mode</span>
+          </button>
+          <button class="btn-header-eval" data-view-target="profile">
+            <i class="fa-solid fa-bolt"></i> Evaluate Profile
+          </button>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <main class="content-body">
+
+        <!-- 1. DASHBOARD OVERVIEW VIEW -->
+        <section class="view-panel active" id="view-overview">
+          <!-- KPI Metrics Row -->
+          <div class="dashboard-grid">
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <span>Total Applications</span>
+                <h3 id="statTotalApplications">3</h3>
+              </div>
+              <div class="kpi-icon indigo"><i class="fa-solid fa-folder-open"></i></div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <span>Accepted Offers</span>
+                <h3 id="statAcceptedCount">1</h3>
+              </div>
+              <div class="kpi-icon emerald"><i class="fa-solid fa-circle-check"></i></div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <span>Average Admission Prob.</span>
+                <h3 id="statAverageProb">63.0%</h3>
+              </div>
+              <div class="kpi-icon amber"><i class="fa-solid fa-chart-column"></i></div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <span>Top Target Match</span>
+                <h3>CMU / Tech</h3>
+              </div>
+              <div class="kpi-icon rose"><i class="fa-solid fa-award"></i></div>
+            </div>
+          </div>
+
+          <!-- Section Grid: Charts & Activity -->
+          <div class="grid-2">
+            <div class="glass-card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-line text-accent"></i> Multi-Year Acceptance Rate Trends (Top
+                  Universities)</h3>
+              </div>
+              <div style="height: 300px;">
+                <canvas id="overviewTrendCanvas"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-pie text-accent"></i> Target Fit Ratio</h3>
+              </div>
+              <div style="height: 300px;">
+                <canvas id="overviewDoughnutCanvas"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action & Recent Activity Grid -->
+          <div class="grid-2-equal">
+            <div class="glass-card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-clock-rotate-left text-accent"></i> Recent Profile Evaluations</h3>
+                <button class="btn btn-secondary btn-sm" data-view-target="history">View All</button>
+              </div>
+              <div id="dashboardRecentActivity">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <div class="glass-card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-bolt text-accent"></i> Quick Predictor Shortcut</h3>
+              </div>
+              <p class="text-secondary" style="font-size: 13px; margin-bottom: 16px;">
+                Evaluate your probability across top-ranked universities instantly with our multi-factorial algorithm.
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <button class="btn btn-primary" data-view-target="profile">
+                  <i class="fa-solid fa-sliders"></i> Open Applicant Profile Form
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- What-If Real-Time Admission Simulator Card -->
+          <div class="glass-card full-width-card simulator-card-container" style="margin-top: 20px;">
+            <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3><i class="fa-solid fa-wand-magic-sparkles text-accent"></i> Instant "What-If" Admission Chance
+                  Simulator</h3>
+                <p class="text-secondary" style="font-size: 13px;">Tweak metrics live to simulate admission probability
+                  adjustments on the fly.</p>
+              </div>
+              <div class="sim-badge-container">
+                <div class="sim-probability-display" id="simProbDisplay">74.5%</div>
+                <span class="badge badge-target" id="simClassDisplay">Target Fit</span>
+              </div>
+            </div>
+            <div class="sim-controls-grid">
+              <div class="sim-control">
+                <label>Target University: <strong id="simUniName">CMU</strong></label>
+                <select id="simUniSelect" class="form-control form-control-sm">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+              <div class="sim-control">
+                <label>Simulated GPA: <strong id="simGpaVal">3.80</strong> / 4.0</label>
+                <input type="range" id="simGpa" min="2.0" max="4.0" step="0.05" value="3.80" class="sim-range">
+              </div>
+              <div class="sim-control">
+                <label>GRE Quant Score: <strong id="simGreVal">165</strong> / 170</label>
+                <input type="range" id="simGre" min="130" max="170" step="1" value="165" class="sim-range">
+              </div>
+              <div class="sim-control">
+                <label>Research Papers: <strong id="simPapersVal">2</strong></label>
+                <input type="range" id="simPapers" min="0" max="10" step="1" value="2" class="sim-range">
+              </div>
+              <div class="sim-control">
+                <label>Work Exp (Months): <strong id="simWorkVal">18</strong>m</label>
+                <input type="range" id="simWork" min="0" max="48" step="3" value="18" class="sim-range">
+              </div>
+            </div>
+            <div class="sim-footer">
+              <span id="simRecommendationText" class="text-muted"><i class="fa-solid fa-lightbulb text-amber"></i> Drag
+                sliders to simulate real-time admission curve adjustment.</span>
+              <button class="btn btn-sm btn-primary" id="simApplyToProfileBtn"><i class="fa-solid fa-check"></i> Load
+                into Profile Form</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. APPLICANT PROFILE FORM VIEW -->
+        <section class="view-panel" id="view-profile">
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-user-pen text-accent"></i> Student Academic & Profile Evaluation Form</h3>
+                <p class="text-secondary" style="font-size: 13px;">Input GPA, test scores, research publications, and
+                  qualitative background factors.</p>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary btn-sm" id="presetStellar"><i class="fa-solid fa-star"></i> Load
+                  Stellar Preset</button>
+                <button class="btn btn-secondary btn-sm" id="presetAverage"><i class="fa-solid fa-user"></i> Load
+                  Average Preset</button>
+              </div>
+            </div>
+
+            <form id="applicantProfileForm">
+              <div class="form-grid">
+
+                <!-- Personal & Target Info -->
+                <div class="form-group">
+                  <label for="applicantName">Applicant Name</label>
+                  <input type="text" id="applicantName" class="form-control" placeholder="e.g. Aarav Patel"
+                    value="Aarav Patel" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="targetDegree">Target Degree Level</label>
+                  <select id="targetDegree" class="form-control">
+                    <option value="MS" selected>Master of Science (MS)</option>
+                    <option value="PhD">Doctor of Philosophy (PhD)</option>
+                    <option value="BS">Bachelor of Science (BS)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="targetMajor">Target Field / Major</label>
+                  <select id="targetMajor" class="form-control">
+                    <option value="Computer Science" selected>Computer Science</option>
+                    <option value="Artificial Intelligence">Artificial Intelligence & ML</option>
+                    <option value="Data Science">Data Science & Analytics</option>
+                    <option value="Software Engineering">Software Engineering</option>
+                    <option value="Electrical Engineering">Electrical & Computer Eng.</option>
+                    <option value="Cybersecurity">Cybersecurity</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="targetUniversity">Target University Choice</label>
+                  <select id="targetUniversity" class="form-control">
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+
+                <!-- Academic Statistics -->
+                <div class="form-group">
+                  <label for="gpa">Cumulative GPA</label>
+                  <div style="display: flex; gap: 10px;">
+                    <input type="number" step="0.01" id="gpa" class="form-control" placeholder="3.80" value="3.82"
+                      min="0" max="100" required>
+                    <select id="gpaScale" class="form-control" style="width: 110px;">
+                      <option value="4.0" selected>4.0 Scale</option>
+                      <option value="10.0">10.0 Scale</option>
+                      <option value="100%">100% Scale</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="testType">Standardized Test Type</label>
+                  <select id="testType" class="form-control">
+                    <option value="GRE" selected>GRE (Graduate Record Exam)</option>
+                    <option value="SAT">SAT (Undergraduate)</option>
+                    <option value="NONE">Test Optional / Not Submitted</option>
+                  </select>
+                </div>
+
+                <!-- GRE Specific inputs -->
+                <div id="greFields" class="form-group full-width"
+                  style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <div class="form-group">
+                    <label for="greQuant">GRE Quantitative Score (130-170)</label>
+                    <input type="number" id="greQuant" class="form-control" value="167" min="130" max="170">
+                  </div>
+                  <div class="form-group">
+                    <label for="greVerbal">GRE Verbal Score (130-170)</label>
+                    <input type="number" id="greVerbal" class="form-control" value="158" min="130" max="170">
+                  </div>
+                </div>
+
+                <!-- SAT Specific inputs -->
+                <div id="satFields" class="form-group full-width" style="display: none;">
+                  <div class="form-group">
+                    <label for="satScore">SAT Composite Score (400-1600)</label>
+                    <input type="number" id="satScore" class="form-control" value="1480" min="400" max="1600">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="toeflScore">TOEFL iBT Score (0-120)</label>
+                  <input type="number" id="toeflScore" class="form-control" value="108" min="0" max="120">
+                </div>
+
+                <!-- Research & Work Background -->
+                <div class="form-group">
+                  <label for="researchPapers">Research Papers Published</label>
+                  <input type="number" id="researchPapers" class="form-control" value="2" min="0" max="20">
+                </div>
+
+                <div class="form-group">
+                  <label for="researchTier">Publication Tier</label>
+                  <select id="researchTier" class="form-control">
+                    <option value="Tier1" selected>Tier 1 (IEEE / ACM / Springer Journal)</option>
+                    <option value="Tier2">Tier 2 (National Conference)</option>
+                    <option value="Tier3">Tier 3 (Institutional / Workshop)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="workExpMonths">Work Experience / Internships (Months)</label>
+                  <input type="number" id="workExpMonths" class="form-control" value="18" min="0" max="120">
+                </div>
+
+                <div class="form-group">
+                  <label for="workRoleRelevance">Work Role Technical Relevance</label>
+                  <select id="workRoleRelevance" class="form-control">
+                    <option value="High" selected>High (Software Dev, Data Science, Engineer)</option>
+                    <option value="Medium">Medium (IT Support, Tech Analyst)</option>
+                    <option value="Low">Low / Unrelated Role</option>
+                  </select>
+                </div>
+
+                <!-- Sliders for Qualitative & EC Factors -->
+                <div class="form-group">
+                  <label>Leadership Index (1-10): <span class="range-val" id="leadershipIndexVal">8</span></label>
+                  <input type="range" id="leadershipIndex" min="1" max="10" value="8" data-display="leadershipIndexVal">
+                </div>
+
+                <div class="form-group">
+                  <label>Extracurricular Score (1-10): <span class="range-val"
+                      id="extracurricularScoreVal">8</span></label>
+                  <input type="range" id="extracurricularScore" min="1" max="10" value="8"
+                    data-display="extracurricularScoreVal">
+                </div>
+
+                <div class="form-group">
+                  <label>SOP Strength (1-10): <span class="range-val" id="sopQualityVal">8.5</span></label>
+                  <input type="range" id="sopQuality" min="1" max="10" step="0.5" value="8.5"
+                    data-display="sopQualityVal">
+                </div>
+
+                <div class="form-group">
+                  <label>LOR Recommendation Quality (1-10): <span class="range-val" id="lorStrengthVal">9</span></label>
+                  <input type="range" id="lorStrength" min="1" max="10" step="0.5" value="9.0"
+                    data-display="lorStrengthVal">
+                </div>
+
+              </div>
+
+              <div class="form-actions">
+                <button type="reset" class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i> Reset
+                  Form</button>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-calculator"></i> Calculate Admission
+                  Probability</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- 3. UNIVERSITY EXPLORER VIEW -->
+        <section class="view-panel" id="view-explorer">
+          <div class="glass-card mb-4">
+            <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3><i class="fa-solid fa-building-columns text-accent"></i> Global University Directory & Admissions
+                  Matrix</h3>
+                <p class="text-secondary" style="font-size: 13px;">Explore top institutions, filter by region & tier,
+                  and compare side-by-side.</p>
+              </div>
+            </div>
+            <div class="explorer-filters-bar">
+              <div class="search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="explorerSearch" class="form-control"
+                  placeholder="Search university name, state, location, or short code...">
+              </div>
+              <select id="explorerRegionFilter" class="form-control" style="max-width: 170px;">
+                <option value="ALL">All Regions</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+                <option value="Europe">Europe</option>
+                <option value="Canada">Canada</option>
+                <option value="Asia">Asia</option>
+                <option value="India">India</option>
+                <option value="Australia">Australia</option>
+              </select>
+              <select id="explorerStateFilter" class="form-control" style="max-width: 180px;">
+                <option value="ALL">All States / Provinces</option>
+                <option value="California">California (CA)</option>
+                <option value="Massachusetts">Massachusetts (MA)</option>
+                <option value="Pennsylvania">Pennsylvania (PA)</option>
+                <option value="New York">New York (NY)</option>
+                <option value="Georgia">Georgia (GA)</option>
+                <option value="Illinois">Illinois (IL)</option>
+                <option value="Washington">Washington (WA)</option>
+                <option value="Michigan">Michigan (MI)</option>
+                <option value="Texas">Texas (TX)</option>
+                <option value="Arizona">Arizona (AZ)</option>
+                <option value="Ontario">Ontario (Canada)</option>
+                <option value="Oxfordshire">Oxfordshire (UK)</option>
+                <option value="Cambridgeshire">Cambridgeshire (UK)</option>
+                <option value="Greater London">London (UK)</option>
+                <option value="Zurich">Zurich (Switzerland)</option>
+                <option value="Bavaria">Bavaria (Germany)</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Karnataka">Karnataka (India)</option>
+                <option value="Victoria">Victoria (Australia)</option>
+              </select>
+              <select id="explorerTierFilter" class="form-control" style="max-width: 180px;">
+                <option value="ALL">All Tiers</option>
+                <option value="Tier 1 (Elite)">Tier 1 (Elite)</option>
+                <option value="Tier 2 (Top Tier)">Tier 2 (Top Tier)</option>
+                <option value="Tier 3 (High Match)">Tier 3 (High Match)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Side-by-Side Comparison Floating Bar -->
+          <div class="compare-bar" id="compareBar" style="display: none;">
+            <div class="compare-info">
+              <i class="fa-solid fa-layer-group text-accent"></i>
+              <span id="compareCountText">0 universities selected</span>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-secondary btn-sm" id="clearCompareBtn">Clear</button>
+              <button class="btn btn-primary btn-sm" id="launchCompareBtn"><i class="fa-solid fa-code-compare"></i>
+                Compare Side-by-Side</button>
+            </div>
+          </div>
+
+          <!-- Universities Grid -->
+          <div class="uni-cards-grid" id="uniCardsGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+
+
+        <!-- 6. HISTORICAL ANALYTICS VIEW -->
+        <section class="view-panel" id="view-analytics">
+          <div class="grid-2-equal">
+            <div class="glass-card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-line text-accent"></i> 6-Year Acceptance Rate Shifts (2021 - 2026)</h3>
+              </div>
+              <div style="height: 320px;">
+                <canvas id="analyticsTrendCanvas"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-bar text-accent"></i> Admitted Student GPA Benchmarks</h3>
+              </div>
+              <div style="height: 320px;">
+                <canvas id="analyticsBenchmarkCanvas"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. APPLICATION HISTORY VIEW -->
+        <section class="view-panel" id="view-history">
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-clock-rotate-left text-accent"></i> Applicant Application History Tracker</h3>
+                <p class="text-secondary" style="font-size: 13px;">Track 53 saved predictions, application statuses, and
+                  export data.</p>
+              </div>
+              <button class="btn btn-primary btn-sm" id="exportCsvBtn"><i class="fa-solid fa-download"></i> Export
+                History CSV</button>
+            </div>
+
+            <div class="explorer-filters-bar mb-3" style="margin-top: 16px; margin-bottom: 16px;">
+              <div class="search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="historySearchInput" class="form-control"
+                  placeholder="Search 53 applicant names, university, or program...">
+              </div>
+              <select id="historyStatusFilter" class="form-control" style="max-width: 180px;">
+                <option value="ALL">All Statuses</option>
+                <option value="Evaluated">Evaluated</option>
+                <option value="Applied">Applied</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Applicant</th>
+                    <th>University</th>
+                    <th>Program</th>
+                    <th>Admission Prob.</th>
+                    <th>Classification</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+
+
+  <!-- DIAGNOSTIC EVALUATION MODAL -->
+  <div class="modal-overlay" id="diagnosticModal" style="display: none;">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div>
+          <span class="badge badge-tag" id="diagModalHeaderTag">Diagnostic Evaluation</span>
+          <h2 id="diagModalTitle">Admission Score & Gap Analysis</h2>
+        </div>
+        <button class="modal-close-btn" id="closeDiagModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Top Stats Row -->
+        <div class="diag-summary-row">
+          <div class="diag-prob-box">
+            <div class="diag-prob-number" id="diagProbVal">78.5%</div>
+            <div class="diag-prob-sub">Admission Odds</div>
+            <span class="badge badge-safe" id="diagClassificationBadge">Safe Match</span>
+          </div>
+
+          <div class="diag-uni-details">
+            <h3 id="diagUniName">Carnegie Mellon University</h3>
+            <p id="diagProgramDetails">Master of Science in Computer Science</p>
+            <div class="diag-meta-pills">
+              <span><i class="fa-solid fa-earth-americas"></i> <span id="diagUniRegion">USA</span></span>
+              <span><i class="fa-solid fa-ranking-star"></i> Rank #<span id="diagUniRank">5</span></span>
+              <span><i class="fa-solid fa-percent"></i> Acc. Rate: <span id="diagUniAcceptance">11.2%</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Row: Radar & Score Breakdown -->
+        <div class="grid-2-equal my-4">
+          <div class="diag-chart-box">
+            <h4 class="box-title"><i class="fa-solid fa-chart-radar text-accent"></i> Profile vs Admitted Benchmark</h4>
+            <div style="height: 260px;">
+              <canvas id="diagRadarCanvas"></canvas>
+            </div>
+          </div>
+
+          <div class="diag-breakdown-box">
+            <h4 class="box-title"><i class="fa-solid fa-sliders text-accent"></i> Category Score Contribution</h4>
+            <div class="score-bars-list">
+              <div class="score-bar-item">
+                <div class="score-label"><span>Academic Score</span><strong id="barAcadVal">34 / 40</strong></div>
+                <div class="score-track">
+                  <div class="score-fill bg-indigo" id="barAcadFill" style="width: 85%;"></div>
+                </div>
+              </div>
+              <div class="score-bar-item">
+                <div class="score-label"><span>Research Score</span><strong id="barResearchVal">14 / 20</strong></div>
+                <div class="score-track">
+                  <div class="score-fill bg-rose" id="barResearchFill" style="width: 70%;"></div>
+                </div>
+              </div>
+              <div class="score-bar-item">
+                <div class="score-label"><span>Work & Internships</span><strong id="barWorkVal">11 / 15</strong></div>
+                <div class="score-track">
+                  <div class="score-fill bg-amber" id="barWorkFill" style="width: 73%;"></div>
+                </div>
+              </div>
+              <div class="score-bar-item">
+                <div class="score-label"><span>Leadership & EC</span><strong id="barEcVal">12 / 15</strong></div>
+                <div class="score-track">
+                  <div class="score-fill bg-emerald" id="barEcFill" style="width: 80%;"></div>
+                </div>
+              </div>
+              <div class="score-bar-item">
+                <div class="score-label"><span>SOP & LOR Quality</span><strong id="barQualVal">8.5 / 10</strong></div>
+                <div class="score-track">
+                  <div class="score-fill bg-purple" id="barQualFill" style="width: 85%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Gaps & Optimization Recommendations -->
+        <div class="grid-2-equal">
+          <div class="diag-info-card">
+            <h4><i class="fa-solid fa-triangle-exclamation text-amber"></i> Gap Analysis</h4>
+            <ul class="diag-list" id="diagGapList">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+
+          <div class="diag-info-card">
+            <h4><i class="fa-solid fa-lightbulb text-emerald"></i> Optimization Strategy</h4>
+            <ul class="diag-list" id="diagRecList">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="closeDiagModalBtn2">Close</button>
+        <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON MODAL -->
+  <div class="modal-overlay" id="compareModal" style="display: none;">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div>
+          <span class="badge badge-tag">Side-by-Side Matrix</span>
+          <h2>University Benchmark Comparison</h2>
+        </div>
+        <button class="modal-close-btn" id="closeCompareModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="data-table compare-table" id="compareTable">
+            <thead id="compareTableHead">
+              <!-- Dynamically populated -->
+            </thead>
+            <tbody id="compareTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="closeCompareModalBtn2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Modules -->
+  <script src="js/universitiesData.js"></script>
+  <script src="js/predictorEngine.js"></script>
+  <script src="js/historyManager.js"></script>
+  <script src="js/chartsManager.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
